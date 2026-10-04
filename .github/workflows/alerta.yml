@@ -1,1 +1,30 @@
+name: Notificacion de Despliegue
 
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  notificar:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar codigo del repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Ejecutar script de JavaScript
+        run: node app.js
+
+      - name: Enviar notificacion a ntfy.sh
+        run: |
+          curl -d "Nuevo push detectado en main: El programa Hola Mundo se ha ejecutado con éxito." \
+               -H "Title: DevOps ITLA - Alerta de Despliegue" \
+               -H "Priority: high" \
+               -H "Tags: white_check_mark,rocket" \
+               https://ntfy.sh/devops-itla
